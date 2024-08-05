@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "36378168248",
+    "firebase_url": "https://fir-videocall-dc21d-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "fir-videocall-dc21d",
+    "storage_bucket": "fir-videocall-dc21d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:36378168248:android:927fe8ff8a3fa914f7dd4d",
+        "android_client_info": {
+          "package_name": "com.example.demowebrtc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtuWb5vXFmtzGvzzwOWaPx4ooBiONnxxU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
