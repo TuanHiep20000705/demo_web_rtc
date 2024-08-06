@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -25,31 +26,31 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var viewModel: LoginViewModel
 
-//    private val recordPermissionResult =
-//        registerForActivityResult(
-//            ActivityResultContracts.RequestMultiplePermissions(),
-//        ) { permissions ->
-//            val isPermissionGranted =
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//                    Environment.isExternalStorageManager()
-//                } else {
-//                    permissions.map { it.value }
-//                        .containsAll(listOf(true, true))
-//                }
-//            if (isPermissionDeniedPermanently(Manifest.permission.RECORD_AUDIO)
-//            ) {
-//                // Do nothing, leave it alone here.
-//            } else {
-//                // permission granted.
-//                if (isPermissionGranted) {
-//                    viewModel.updateAudioRecordPermissionState(true)
-//                    binding.switchRecord.isChecked = true
-//                } else {
-//                    AppUserManager.needToShowRationaleDialog = true
-//                }
-//            }
-//        }
+    private val recordPermissionResult =
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions(),
+        ) { permissions ->
+            val isPermissionGranted =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    Environment.isExternalStorageManager()
+                } else {
+                    permissions.map { it.value }
+                        .containsAll(listOf(true, true))
+                }
+            if (isPermissionDeniedPermanently(Manifest.permission.POST_NOTIFICATIONS)
+            ) {
+                // Do nothing, leave it alone here.
+            } else {
+                // permission granted.
+                if (isPermissionGranted) {
 
+                } else {
+
+                }
+            }
+        }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -67,11 +68,18 @@ class LoginActivity : AppCompatActivity() {
         }
 //        FirebaseDatabase.getInstance().reference.child("name").setValue("hiep")
 
-//        if (!hasPermission(Manifest.permission.RECORD_AUDIO)) {
-//            recordPermissionResult.launch(
-//                arrayOf(Manifest.permission.RECORD_AUDIO),
-//            )
-//        }
+        if (!hasPermission(Manifest.permission.POST_NOTIFICATIONS) || !hasPermission(Manifest.permission.CAMERA) || !hasPermission(
+                Manifest.permission.RECORD_AUDIO
+            )
+        ) {
+            recordPermissionResult.launch(
+                arrayOf(
+                    Manifest.permission.POST_NOTIFICATIONS,
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.RECORD_AUDIO
+                ),
+            )
+        }
     }
 
     private fun handleEvent(event: LoginViewModel.Event) {
