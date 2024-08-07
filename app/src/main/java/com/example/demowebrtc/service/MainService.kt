@@ -11,6 +11,7 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.demowebrtc.R
+import com.example.demowebrtc.activity.call.CallActivity
 import com.example.demowebrtc.activity.main.MainActivity
 import com.example.demowebrtc.constants.MainServiceActions
 import com.example.demowebrtc.data.model.DataModel
@@ -18,6 +19,7 @@ import com.example.demowebrtc.data.model.DataModelType
 import com.example.demowebrtc.data.model.isValid
 import com.example.demowebrtc.repository.MainRepository
 import dagger.hilt.android.AndroidEntryPoint
+import org.webrtc.SurfaceViewRenderer
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -54,7 +56,18 @@ class MainService : Service(), MainRepository.Listener {
             // setup my clients
             mainRepository.listener = this
             mainRepository.initFirebase()
+            mainRepository.initWebrtcClient(username!!)
         }
+    }
+
+    private fun handleSetupViews(incomingIntent: Intent) {
+        val isCaller = incomingIntent.getBooleanExtra(CallActivity.IS_CALLER, false)
+        val isVideoCall = incomingIntent.getBooleanExtra(CallActivity.IS_VIDEO_CALL, true)
+        val target = incomingIntent.getStringExtra(CallActivity.TARGET) ?: ""
+
+        mainRepository.setTarget(target)
+        mainRepository.initLocalSurfaceView(localSurfaceView!!, isVideoCall)
+        mainRepository.initRemoteSurfaceView(remoteSurfaceView!!)
     }
 
     @SuppressLint("ForegroundServiceType")
@@ -88,11 +101,17 @@ class MainService : Service(), MainRepository.Listener {
         }
     }
 
+    override fun endCall() {
+        TODO("Not yet implemented")
+    }
+
     interface Listener {
         fun onCallReceived(model: DataModel)
     }
 
     companion object {
         var listener: Listener? = null
+        var localSurfaceView: SurfaceViewRenderer? = null
+        var remoteSurfaceView: SurfaceViewRenderer? = null
     }
 }

@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,8 +20,20 @@ class CallViewModel @Inject constructor(
     private val _onEvent = Channel<Event>(Channel.BUFFERED)
     val onEvent = _onEvent.receiveAsFlow()
 
+    fun init(target: String, isVideoCall: Boolean, isCaller: Boolean) {
+        _uiState.update {
+            it.copy(
+                target = target,
+                isVideoCall = isVideoCall,
+                isCaller = isCaller
+            )
+        }
+    }
+
     data class UiState(
-        val isLoadingSuccess: Boolean = false
+        val target: String = "",
+        val isVideoCall: Boolean = true,
+        val isCaller: Boolean = false
     )
 
     sealed class Event {

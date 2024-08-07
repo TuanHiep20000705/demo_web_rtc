@@ -35,6 +35,9 @@
         <activity
             android:name=".activity.main.MainActivity"
             android:exported="true" />
+        <activity
+            android:name=".activity.call.CallActivity"
+            android:exported="true" />
         <service android:name=".service.MainService" android:foregroundServiceType="specialUse"/>
     </application>
 

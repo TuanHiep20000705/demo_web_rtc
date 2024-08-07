@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.demowebrtc.R
+import com.example.demowebrtc.activity.call.CallActivity
 import com.example.demowebrtc.data.model.DataModel
 import com.example.demowebrtc.data.model.DataModelType
 import com.example.demowebrtc.databinding.ActivityMainBinding
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity(), MainRecyclerViewAdapter.Listener, Main
     private val mainAdapter: MainRecyclerViewAdapter by lazy {
         MainRecyclerViewAdapter(this)
     }
+
     @Inject
     lateinit var mainServiceRepository: MainServiceRepository
 
@@ -56,6 +58,7 @@ class MainActivity : AppCompatActivity(), MainRecyclerViewAdapter.Listener, Main
             is MainViewModel.Event.GoBackToLoginScreen -> {
                 finish()
             }
+
             is MainViewModel.Event.InitSuccess -> {
                 mainAdapter.updateList(event.status)
                 startMyService()
@@ -74,6 +77,7 @@ class MainActivity : AppCompatActivity(), MainRecyclerViewAdapter.Listener, Main
 
     override fun onVideoCallClicked(username: String) {
         viewModel.sendConnectionRequest(username, true)
+        CallActivity.launch(this, username, isVideoCall = true, isCaller = true)
     }
 
     override fun onAudioCallClicked(username: String) {
@@ -88,6 +92,12 @@ class MainActivity : AppCompatActivity(), MainRecyclerViewAdapter.Listener, Main
             incomingCallLayout.isVisible = true
             acceptButton.setOnClickListener {
                 incomingCallLayout.isVisible = false
+                CallActivity.launch(
+                    this@MainActivity,
+                    model.sender ?: "",
+                    isVideoCall = true,
+                    isCaller = false
+                )
             }
             declineButton.setOnClickListener {
                 incomingCallLayout.isVisible = false
